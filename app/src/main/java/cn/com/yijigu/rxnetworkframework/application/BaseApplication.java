@@ -22,6 +22,7 @@ public class BaseApplication  extends Application {
     private static Thread mMainThread;
     /** 主线程Handler */
     private static Handler mMainThreadHandler;
+
     /** 主线程Looper */
     private static Looper mMainLooper;
 
