@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RxNetWorkFrameWork</string>
+
+    <string name="web_user_agent">set</string>
+</resources>
