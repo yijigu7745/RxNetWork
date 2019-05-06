@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RxNetWork</string>
+    <string name="web_user_agent">set</string>
+</resources>
