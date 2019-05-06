@@ -13,6 +13,7 @@ import java.util.List;
 public class BaseApplication  extends Application {
     private static BaseApplication mInstance;
 
+
     private List<Activity> activities = new LinkedList<Activity>();
 
     public static Context mContext;
