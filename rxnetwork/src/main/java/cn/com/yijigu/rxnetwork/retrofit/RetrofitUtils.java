@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitUtils {
     private static Retrofit mRetrofit;
 
-    public static IService getInterface(String url, IView iView, IService iService){
+    public static <T> T getInterface(String url, IView iView, Class<T> iService){
 
         if(StringUtils.isEmpty(url)){
             throw new NullPointerException("url can't be null");
@@ -33,6 +33,6 @@ public class RetrofitUtils {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
-        return mRetrofit.create(iService.getClass());
+        return mRetrofit.create(iService);
     }
 }
