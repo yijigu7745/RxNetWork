@@ -12,6 +12,9 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 
+/**
+ * @author yijigu
+ */
 public class CookieInterceptor implements Interceptor{
     public  static List<String> cookieSet=new ArrayList<>();
     @Override

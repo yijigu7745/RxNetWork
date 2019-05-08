@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 
 import cn.com.yijigu.rxnetwork.application.BaseApplication;
 
+/**
+ * @author yijigu
+ */
 public class DataManager {
     private static final String NAME = "BaseApplication";
     private static final String COOKIE = "cookie";

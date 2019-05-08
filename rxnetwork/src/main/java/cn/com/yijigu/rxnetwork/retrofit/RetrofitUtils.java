@@ -10,10 +10,21 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Retrofit网络请求接口
+ * @author yijigu
+ */
 public class RetrofitUtils {
     private static Retrofit mRetrofit;
 
-    public static <T> T getInterface(String url, IView iView, Class<T> iService){
+    /**
+     * @param url 请求路径
+     * @param iView Activity的引用
+     * @param iService 请求接口的引用
+     * @param <T>
+     * @return
+     */
+    public static <T extends IService> T getInterface(String url, IView iView, Class<T> iService){
 
         if(StringUtils.isEmpty(url)){
             throw new NullPointerException("url can't be null");

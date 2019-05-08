@@ -4,6 +4,9 @@ import android.content.Context;
 
 import okhttp3.Cache;
 
+/**
+ * @author yijigu
+ */
 public class CacheProvider {
     Context mContext;
 

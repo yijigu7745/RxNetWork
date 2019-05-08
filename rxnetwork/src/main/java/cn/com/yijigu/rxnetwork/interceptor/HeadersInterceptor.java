@@ -19,6 +19,9 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * @author yijigu
+ */
 public class HeadersInterceptor implements Interceptor{
     private final static String TAG = "HeadersInterceptor";
     private SoftReference<Context> rxActivity;

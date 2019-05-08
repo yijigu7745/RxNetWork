@@ -10,6 +10,9 @@ import cn.com.yijigu.rxnetwork.interceptor.HeadersInterceptor;
 import cn.com.yijigu.rxnetwork.utils.Constants;
 import okhttp3.OkHttpClient;
 
+/**
+ * @author yijigu
+ */
 public class HttpProvider {
 
     static OkHttpClient okHttpClient;

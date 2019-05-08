@@ -10,6 +10,9 @@ import android.os.Looper;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author yijigu
+ */
 public class BaseApplication  extends Application {
     private static BaseApplication mInstance;
 

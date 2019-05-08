@@ -1,5 +1,9 @@
 package cn.com.yijigu.rxnetwork.utils;
 
+/**
+ * StringUtils工具类
+ * @author yijigu
+ */
 public class StringUtils {
 
     public static final String EMPTY = "";
