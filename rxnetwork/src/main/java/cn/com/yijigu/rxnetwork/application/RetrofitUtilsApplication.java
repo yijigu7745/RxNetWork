@@ -13,8 +13,8 @@ import java.util.List;
 /**
  * @author yijigu
  */
-public class BaseApplication  extends Application {
-    private static BaseApplication mInstance;
+public class RetrofitUtilsApplication  extends Application {
+    private static Application mInstance;
 
     private List<Activity> activities = new LinkedList<Activity>();
 
@@ -34,15 +34,14 @@ public class BaseApplication  extends Application {
         super.attachBaseContext(base);
     }
 
-    @Override
-    public void onCreate() {
+    public void onCreate(Application application) {
         super.onCreate();
         mContext = this;
         mMainThreadId = android.os.Process.myTid();
         mMainThread = Thread.currentThread();
         mMainThreadHandler = new Handler();
         mMainLooper = getMainLooper();
-        mInstance = this;
+        mInstance = application;
     }
 
     public static Context getAppContext() {
@@ -72,7 +71,7 @@ public class BaseApplication  extends Application {
         activityMgr.restartPackage(getPackageName());
     }
 
-    public static BaseApplication getApplication() {
+    public static Application getApplication() {
         return mInstance;
     }
 
