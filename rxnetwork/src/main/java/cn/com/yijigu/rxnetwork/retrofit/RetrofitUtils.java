@@ -2,7 +2,6 @@ package cn.com.yijigu.rxnetwork.retrofit;
 
 import android.content.Context;
 
-import cn.com.yijigu.rxnetwork.datamanager.IService;
 import cn.com.yijigu.rxnetwork.network.HttpProvider;
 import cn.com.yijigu.rxnetwork.utils.StringUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
@@ -24,7 +23,7 @@ public class RetrofitUtils {
      * @param <T>
      * @return
      */
-    public static <T extends IService> T getInterface(String url, IView iView, Class<T> iService){
+    public static <T> T getInterface(String url, IView iView, Class<T> iService){
 
         if(StringUtils.isEmpty(url)){
             throw new NullPointerException("url can't be null");
@@ -32,10 +31,6 @@ public class RetrofitUtils {
 
         if(iView == null){
             throw new NullPointerException("IView can't be null");
-        }
-
-        if(iService == null){
-            throw new NullPointerException("IService can't be null");
         }
 
         mRetrofit = new Retrofit.Builder()
