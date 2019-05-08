@@ -1,198 +1,131 @@
 package cn.com.yijigu.rxnetworkframework.utils;
 
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
+
+import java.text.DecimalFormat;
+import java.util.List;
+
 public class StringUtils {
 
-    public static final String EMPTY = "";
+    public final static String UTF_8 = "utf-8";
 
-    public static final int INDEX_NOT_FOUND = -1;
-
-    public static boolean isEmpty(String str) {
-        return str == null || str.length() == 0;
-    }
-
-
-    public static boolean isNotEmpty(String str) {
-        return !StringUtils.isEmpty(str);
-    }
-
-    public static boolean isBlank(String str) {
-        int strLen;
-        if (str == null || (strLen = str.length()) == 0) {
+    /** 判断字符串是否有值，如果为null或者是空字符串或者只有空格或者为"null"字符串，则返回true，否则则返回false */
+    public static boolean isEmpty(String value) {
+        if (value != null && !"".equalsIgnoreCase(value.trim()) && !"null".equalsIgnoreCase(value.trim())) {
+            return false;
+        } else {
             return true;
         }
-        for (int i = 0; i < strLen; i++) {
-            if ((Character.isWhitespace(str.charAt(i)) == false)) {
+    }
+
+    /** 判断多个字符串是否相等，如果其中有一个为空字符串或者null，则返回false，只有全相等才返回true */
+    public static boolean isEquals(String... agrs) {
+        String last = null;
+        for (int i = 0; i < agrs.length; i++) {
+            String str = agrs[i];
+            if (isEmpty(str)) {
                 return false;
             }
+            if (last != null && !str.equalsIgnoreCase(last)) {
+                return false;
+            }
+            last = str;
         }
         return true;
     }
 
-    public static boolean isNotBlank(String str) {
-        return !StringUtils.isBlank(str);
-    }
 
-    public static String trim(String str) {
-        return str == null ? null : str.trim();
-    }
 
-    public static String trimToNull(String str) {
-        String ts = trim(str);
-        return isEmpty(ts) ? null : ts;
-    }
-
-    public static String trimToEmpty(String str) {
-        return str == null ? EMPTY : str.trim();
-    }
-
-    public static boolean equals(String str1, String str2) {
-        return str1 == null ? str2 == null : str1.equals(str2);
-    }
-
-    public static boolean equalsIgnoreCase(String str1, String str2) {
-        return str1 == null ? str2 == null : str1.equalsIgnoreCase(str2);
-    }
-
-    public static int indexOf(String str, char searchChar) {
-        if (isEmpty(str)) {
-            return INDEX_NOT_FOUND;
+    /**
+     * 返回一个高亮spannable
+     * @param content 文本内容
+     * @param color   高亮颜色
+     * @param start   起始位置
+     * @param end     结束位置
+     * @return 高亮spannable
+     */
+    public static CharSequence getHighLightText(String content, int color, int start, int end) {
+        if (TextUtils.isEmpty(content)) {
+            return "";
         }
-        return str.indexOf(searchChar);
+        start = start >= 0 ? start : 0;
+        end = end <= content.length() ? end : content.length();
+        SpannableString spannable = new SpannableString(content);
+        CharacterStyle span = new ForegroundColorSpan(color);
+        spannable.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
-    public static int indexOf(String str, char searchChar, int startPos) {
-        if (isEmpty(str)) {
-            return INDEX_NOT_FOUND;
-        }
-        return str.indexOf(searchChar, startPos);
+    /** 格式化文件大小，不保留末尾的0 */
+    public static String formatFileSize(long len) {
+        return formatFileSize(len, false);
     }
 
-    public static int indexOf(String str, String searchStr) {
-        if (str == null || searchStr == null) {
-            return INDEX_NOT_FOUND;
-        }
-        return str.indexOf(searchStr);
-    }
-
-    public static int indexOf(String str, String searchStr, int startPos) {
-        if (str == null || searchStr == null) {
-            return INDEX_NOT_FOUND;
-        }
-        // JDK1.2/JDK1.3 have a bug, when startPos > str.length for "", hence
-        if (searchStr.length() == 0 && startPos >= str.length()) {
-            return str.length();
-        }
-        return str.indexOf(searchStr, startPos);
-    }
-
-    public static int indexOfIgnoreCase(String str, String searchStr) {
-        return indexOfIgnoreCase(str, searchStr, 0);
-    }
-
-    public static int indexOfIgnoreCase(String str, String searchStr, int startPos) {
-        if (str == null || searchStr == null) {
-            return INDEX_NOT_FOUND;
-        }
-        if (startPos < 0) {
-            startPos = 0;
-        }
-        int endLimit = (str.length() - searchStr.length()) + 1;
-        if (startPos > endLimit) {
-            return INDEX_NOT_FOUND;
-        }
-        if (searchStr.length() == 0) {
-            return startPos;
-        }
-        for (int i = startPos; i < endLimit; i++) {
-            if (str.regionMatches(true, i, searchStr, 0, searchStr.length())) {
-                return i;
+    /** 格式化文件大小，保留末尾的0，达到长度一致 */
+    public static String formatFileSize(long len, boolean keepZero) {
+        String size;
+        DecimalFormat formatKeepTwoZero = new DecimalFormat("#.00");
+        DecimalFormat formatKeepOneZero = new DecimalFormat("#.0");
+        if (len < 1024) {
+            size = String.valueOf(len + "B");
+        } else if (len < 10 * 1024) {
+            // [0, 10KB)，保留两位小数
+            size = String.valueOf(len * 100 / 1024 / (float) 100) + "KB";
+        } else if (len < 100 * 1024) {
+            // [10KB, 100KB)，保留一位小数
+            size = String.valueOf(len * 10 / 1024 / (float) 10) + "KB";
+        } else if (len < 1024 * 1024) {
+            // [100KB, 1MB)，个位四舍五入
+            size = String.valueOf(len / 1024) + "KB";
+        } else if (len < 10 * 1024 * 1024) {
+            // [1MB, 10MB)，保留两位小数
+            if (keepZero) {
+                size = String.valueOf(formatKeepTwoZero.format(len * 100 / 1024 / 1024 / (float) 100)) + "MB";
+            } else {
+                size = String.valueOf(len * 100 / 1024 / 1024 / (float) 100) + "MB";
             }
-        }
-        return INDEX_NOT_FOUND;
-    }
-
-    public static int lastIndexOf(String str, char searchChar) {
-        if (isEmpty(str)) {
-            return INDEX_NOT_FOUND;
-        }
-        return str.lastIndexOf(searchChar);
-    }
-
-    public static int lastIndexOf(String str, char searchChar, int startPos) {
-        if (isEmpty(str)) {
-            return INDEX_NOT_FOUND;
-        }
-        return str.lastIndexOf(searchChar, startPos);
-    }
-
-    public static int lastIndexOf(String str, String searchStr) {
-        if (str == null || searchStr == null) {
-            return INDEX_NOT_FOUND;
-        }
-        return str.lastIndexOf(searchStr);
-    }
-
-    public static int lastIndexOf(String str, String searchStr, int startPos) {
-        if (str == null || searchStr == null) {
-            return INDEX_NOT_FOUND;
-        }
-        return str.lastIndexOf(searchStr, startPos);
-    }
-
-    public static int lastIndexOfIgnoreCase(String str, String searchStr) {
-        if (str == null || searchStr == null) {
-            return INDEX_NOT_FOUND;
-        }
-        return lastIndexOfIgnoreCase(str, searchStr, str.length());
-    }
-
-    public static int lastIndexOfIgnoreCase(String str, String searchStr, int startPos) {
-        if (str == null || searchStr == null) {
-            return INDEX_NOT_FOUND;
-        }
-        if (startPos > (str.length() - searchStr.length())) {
-            startPos = str.length() - searchStr.length();
-        }
-        if (startPos < 0) {
-            return INDEX_NOT_FOUND;
-        }
-        if (searchStr.length() == 0) {
-            return startPos;
-        }
-
-        for (int i = startPos; i >= 0; i--) {
-            if (str.regionMatches(true, i, searchStr, 0, searchStr.length())) {
-                return i;
+        } else if (len < 100 * 1024 * 1024) {
+            // [10MB, 100MB)，保留一位小数
+            if (keepZero) {
+                size = String.valueOf(formatKeepOneZero.format(len * 10 / 1024 / 1024 / (float) 10)) + "MB";
+            } else {
+                size = String.valueOf(len * 10 / 1024 / 1024 / (float) 10) + "MB";
             }
+        } else if (len < 1024 * 1024 * 1024) {
+            // [100MB, 1GB)，个位四舍五入
+            size = String.valueOf(len / 1024 / 1024) + "MB";
+        } else {
+            // [1GB, ...)，保留两位小数
+            size = String.valueOf(len * 100 / 1024 / 1024 / 1024 / (float) 100) + "GB";
         }
-        return INDEX_NOT_FOUND;
+        return size;
+    }
+    public static String tranferNumber(int number){
+        switch (number){
+            case 1:
+                return "一";
+            case 2:
+                return "二";
+            case 3:
+                return "三";
+            case 4:
+                return "四";
+            case 5:
+                return "五";
+            default:
+                return "";
+        }
     }
 
-    public static boolean contains(String str, char searchChar) {
-        if (isEmpty(str)) {
+    public static boolean isListEmpty(List<String> cookies) {
+        if(cookies!=null && !cookies.isEmpty()){
             return false;
+        }else{
+            return true;
         }
-        return str.indexOf(searchChar) >= 0;
-    }
-
-    public static boolean contains(String str, String searchStr) {
-        if (str == null || searchStr == null) {
-            return false;
-        }
-        return str.indexOf(searchStr) >= 0;
-    }
-
-    public static boolean containsIgnoreCase(String str, String searchStr) {
-        if (str == null || searchStr == null) {
-            return false;
-        }
-        int len = searchStr.length();
-        int max = str.length() - len;
-        for (int i = 0; i <= max; i++) {
-            if (str.regionMatches(true, i, searchStr, 0, len)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

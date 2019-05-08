@@ -1,32 +1,33 @@
-package cn.com.yijigu.rxnetworkframework.application;
+package cn.com.yijigu.rxnetworkframework.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class BaseApplication  extends Application {
-    private static BaseApplication mInstance;
+public class ApplicationUtils extends Application {
+
+    public static Context mContext;
 
     private List<Activity> activities = new LinkedList<Activity>();
 
-    public static Context mContext;
+    private static ApplicationUtils mInstance;
     /** 主线程ID */
     private static int mMainThreadId = -1;
-    /** 主线程 */
+    /** 主线程ID */
     private static Thread mMainThread;
     /** 主线程Handler */
     private static Handler mMainThreadHandler;
-
     /** 主线程Looper */
     private static Looper mMainLooper;
 
-    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
     }
@@ -41,6 +42,22 @@ public class BaseApplication  extends Application {
         mMainLooper = getMainLooper();
         mInstance = this;
     }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (newConfig.fontScale != 1)//非默认值
+            this.getResources();
+        super.onConfigurationChanged(newConfig);
+    }
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        if (res.getConfiguration().fontScale != 1) {//非默认值
+            Configuration newConfig = new Configuration();
+            newConfig.setToDefaults();//设置默认
+            res.updateConfiguration(newConfig, res.getDisplayMetrics());
+        }
+        return res;
+    }
 
     public static Context getAppContext() {
         return mContext;
@@ -49,7 +66,8 @@ public class BaseApplication  extends Application {
     /***
      * 添加一个activty
      *
-     * @param activity 需要添加的activity
+     * @param activity
+     *            需要添加的activity
      */
     public void addActivity(Activity activity) {
         activities.add(activity);
@@ -68,8 +86,28 @@ public class BaseApplication  extends Application {
         ActivityManager activityMgr = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         activityMgr.restartPackage(getPackageName());
     }
+    /***
+     * 退出应用
+     */
+    public void exitAppLogin() {
+//        activities.clear();
+//        System.exit(0);
+//        ActivityManager activityMgr = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+//        activityMgr.restartPackage(getPackageName());
+    }
+    /***
+     * 退出应用
+     */
+    public Activity getOneActity(Class cls) {
+        for (Activity activity : activities) {
+            if(activity.getClass() == cls){
+                return  activity;
+            }
+        }
+        return null;
+    }
 
-    public static BaseApplication getApplication() {
+    public static ApplicationUtils getApplication() {
         return mInstance;
     }
 
