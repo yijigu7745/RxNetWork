@@ -22,11 +22,11 @@ public class HttpProvider {
             synchronized (HttpProvider.class) {
                 if (okHttpClient==null) {
                     OkHttpClient client = new OkHttpClient.Builder()
+                            .addInterceptor(new CookieInterceptor())
                             .retryOnConnectionFailure(true)
                             .addNetworkInterceptor(new CacheInterceptor())
                             .cache(new CacheProvider(context).provideCache())
                             .connectTimeout(Constants.DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                            .addInterceptor(new CookieInterceptor())
                             .addInterceptor(new HeadersInterceptor(context))
                             .build();
                     okHttpClient = client;
