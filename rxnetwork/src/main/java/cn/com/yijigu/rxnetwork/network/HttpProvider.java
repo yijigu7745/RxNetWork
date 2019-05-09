@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import cn.com.yijigu.rxnetwork.interceptor.CacheInterceptor;
 import cn.com.yijigu.rxnetwork.interceptor.CookieInterceptor;
 import cn.com.yijigu.rxnetwork.interceptor.HeadersInterceptor;
+import cn.com.yijigu.rxnetwork.retrofit.SSLSocketClient;
 import cn.com.yijigu.rxnetwork.utils.Constants;
 import okhttp3.OkHttpClient;
 
@@ -22,6 +23,7 @@ public class HttpProvider {
             synchronized (HttpProvider.class) {
                 if (okHttpClient==null) {
                     OkHttpClient client = new OkHttpClient.Builder()
+                            .sslSocketFactory(SSLSocketClient.getSSLSocketFactory(),SSLSocketClient.getX509TrustManager())
                             .addInterceptor(new CookieInterceptor())
                             .retryOnConnectionFailure(true)
                             .addNetworkInterceptor(new CacheInterceptor())
