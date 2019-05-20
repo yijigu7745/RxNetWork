@@ -11,3 +11,6 @@ jcenter()<br>
 maven { url 'https://jitpack.io' }<br>
 }<br>
 }<br>
+
+在基Application里进行初始化：<br>
+new RetrofitUtilsApplication().onCreate(this);
