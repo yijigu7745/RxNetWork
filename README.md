@@ -1,8 +1,6 @@
 # RxNetWork
-添加依赖
-<br>
-implementation 'com.github.yijigu7745:RxNetWork:0.35-alpha'
-<br>
+添加依赖<br>
+implementation 'com.github.yijigu7745:RxNetWork:0.35-alpha'<br>
 Project的build.gradle里需要添加<br>
 allprojects {<br>
 repositories {<br>
