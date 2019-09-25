@@ -2,4 +2,6 @@
     <string name="app_name">RxNetWorkFrameWork</string>
 
     <string name="web_user_agent">set</string>
+    <string name="userName">用户名</string>
+    <string name="password">密码</string>
 </resources>
